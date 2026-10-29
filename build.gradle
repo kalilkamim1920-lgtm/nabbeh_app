@@ -1,0 +1,60 @@
+plugins {
+    id "com.android.application"
+    id "org.jetbrains.kotlin.android"
+    id "org.jetbrains.kotlin.kapt"
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
+android {
+    namespace = "com.nabbeh.app"
+    compileSdk = flutter.compileSdkVersion
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+
+    defaultConfig {
+        applicationId = "com.nabbeh.app"
+        // الحد الأدنى 24 لتوافق EncryptedSharedPreferences وSQLCipher
+        minSdk = 24
+        targetSdk = flutter.targetSdkVersion
+        versionCode = flutter.versionCode
+        versionName = flutter.versionName
+    }
+
+    buildTypes {
+        release {
+            // توقيع مبدئي بمفتاح التطوير — بدّله قبل النشر على المتاجر
+            signingConfig = signingConfigs.debug
+            // فعّلها لاحقاً مع إضافة قواعد proguard المناسبة
+            minifyEnabled = false
+            shrinkResources = false
+        }
+    }
+}
+
+flutter {
+    source = "../.."
+}
+
+dependencies {
+    implementation "androidx.core:core-ktx:1.13.1"
+
+    // Room + SQLCipher — قاعدة بيانات مشفرة بالكامل
+    implementation "androidx.room:room-runtime:2.6.1"
+    implementation "androidx.room:room-ktx:2.6.1"
+    kapt "androidx.room:room-compiler:2.6.1"
+    implementation "net.zetetic:android-database-sqlcipher:4.5.4"
+    implementation "androidx.sqlite:sqlite-ktx:2.4.0"
+
+    // تخزين مشفر للإعدادات الحساسة
+    implementation "androidx.security:security-crypto:1.1.0-alpha06"
+
+    // Coroutines للعمل غير المتزامن
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1"
+}
